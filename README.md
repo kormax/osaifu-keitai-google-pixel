@@ -43,7 +43,7 @@ b) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide
 
 ## Overcome the limitations without root.
 
-Following actions have been unsuccessfuly tried:
+Following methods have been unsuccessfuly attempted:
 
 1. Manipulate `com.google.android.pixelnfc`:  
 (FAIL) System apps are well-protected agaist manipulation.  
@@ -58,7 +58,7 @@ Not possible as android requires app overwrites/updates to have the same signatu
 (UNKNOWN) This might be possible to do without root, but I did not attempt to finish it to the end as it proved to be too complex lacking any experience with android development.  
 Thing is, `com.felicanetworks.mfm.main` communicates with, `com.felicanetworks.mfc` (Mobile Felica client),  `com.felicanetworks.mfs` (Mobile Felica settings), `com.google.android.gms.pay.sidecar` (Google Play services for payments) which all do mutual signature verification, thus requiring you to patch ALL of those apps for them to work, replacing signatures and fixing API access due to signature changes.
 
-As rootless solutions have reached a dead end, we're gonna join the **dark side**.
+As rootless solutions have led us to a dead end, we're gonna join the **dark side**.
 
 
 ## Solutions that require unlocking the bootloader and/or rooting.
