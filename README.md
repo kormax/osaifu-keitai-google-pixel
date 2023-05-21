@@ -103,7 +103,7 @@ If you go with a 3) way you should know the following tips:
 3. To delete a system app, you can use [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater). Reboot the system after removing the patch.
 4. To unpack and pack apk into modifyable (SMALI) form, use [apktool](https://ibotpeaches.github.io/Apktool/).
 5. To verify that your SMALI modifications did not break the code, you can decompile the app using [jadx](https://github.com/skylot/jadx) and check that the modifyed code has no errors.
-6. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision a some cards.
+6. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision some cards.
 6. Some apps detect root by tring to invoke Magisk, hide it and add the problematic app into the denylist.
 7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work (for me it didn't).
 8. When following tutorials, watch the tutorial FIRST before starting to follow it. Rewatch multiple times, and follow the video closely in order not to skip an important step.
