@@ -18,7 +18,7 @@ This doc describes the way that the Osaifu-Keitai feature is disabled on non-jap
 
 Both Google Pixel 7 and 6 series devices have the required applet provisoned in the SE from the factory, although other models could be supported too. This can be checked in the following manner:
 
-If you download the Osaifu-Keitai app (com.felicanetworks.mfm.main) and try opening it from a non-japanese model, you'll be presented with a following deceiving error message.
+If you download the [Osaifu-Keitai](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main) app `com.felicanetworks.mfm.main` and try opening it from a non-japanese model, you'll be presented with a following deceiving error message.
 
  <img src="./assets/OK.INBOUND.UNSUPPORTED.jpg" alt="![Error message which signals that your device does indeed support Osaifu-Keitai but it is disabled]" width=250px>
 
@@ -100,11 +100,23 @@ If you go with a 3) way you should know the following tips:
 7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work (for me it didn't).
 8. When following tutorials, watch the tutorial FIRST before starting to follow it. Rewatch multiple times, and follow the video closely in order not to skip an important step.
 
+
+# Notes
+
+In order to enable japanese Google Wallet UI, you have to install `com.felicanetworks.mfc` and turn on japanese VPN. After a couple of minutes the wallet app should go into "Updating" state, in a couple of minutes after that it will start up with a new japanese UI.   
+
+Be aware that for Osaifu-Keitai functionality to work with Google Wallet, you have to install all following applications:  
+- `com.felicanetworks.mfm.main` 
+- `com.felicanetworks.mfc` 
+- `com.felicanetworks.mfs`  
+- `com.google.android.gms.pay.sidecar`
+
+
 If you unroot/reinstall the system after provisioning the services, they'll continue to be available because the Osaifu-Keitai applet (Unlike CarKey applet and etc) is not cleared upon system reset.
 Related applications won't work, but you'll still be able to use the device as if it were a multiple-card combo.
 
 
-# Notes
+# Other notes
 
 - We can only guess why did Google decide to lock global users from this feature.  
 The biggest probability thus far is licensing requirements, as it is possible that the service provider requires a fee for each device that this feature is enabled for.    
