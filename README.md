@@ -1,8 +1,10 @@
 # Enabling Osaifu-Keitai feature on non-japanese Google Pixel smartphones
 
- <img src="./assets/OK.INIT.webp" alt="![Video demonstrating OK initialization]" width=250px>
+<p float="left">
+ <img src="./assets/OK.INIT.webp" alt="![Video demonstrating OK initialization]" width=200>
+ <img src="./assets/OK.SETUP.PASMO.webp" alt="![Video demonstrating PASMO provisioning]" width=200>
 
- <img src="./assets/OK.SETUP.PASMO.webp" alt="![Video demonstrating PASMO provisioning]" width=250px>
+</p>
 
 
 # Introduction
