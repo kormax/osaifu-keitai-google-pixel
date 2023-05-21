@@ -27,12 +27,12 @@ Upon apk decompilation and code inspection, we see that this app does following 
 1. Upon start, app looks for a file at system path `/product/etc/felica/common.cfg`. If no file is found. App returns a following error message `This phone doesn't support Osaifu-Keitai function. Close this application`.  
 In this case you're SOL and your device or firmware is not compatible anyway.
 
-2. If such a file is found, app reads all entries/keys inside of it and saves them into a hash map. We are interested in following entries:    
-* 00000018
-* 00000015
-* 00000014
+2. If such a file is found, app reads all entries/keys inside of it and saves them into a hash map. We are interested in following entries:   
+   * 00000018
+   * 00000015
+   * 00000014
 
-3. On UI initialization, application calls `isCheckInbound` method, which then does following:  
+3. On UI initialization, application calls `isCheckInbound` method, which then does the following:  
 a) If key 00000018 is available, it checks if its value is "1". If that's the case, app assumes that Osaifu-Keitai is enabled.   
 b) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide/topics/providers/content-providers) URL from key 00000014 and column index 00000015.
 
