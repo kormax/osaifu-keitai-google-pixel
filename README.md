@@ -3,7 +3,7 @@
 <p float="left">
  <img src="./assets/OK.INIT.webp" alt="![Video demonstrating OK initialization]" width=200>
  <img src="./assets/OK.SETUP.PASMO.webp" alt="![Video demonstrating PASMO provisioning]" width=200>
-
+<img src="./assets/OK.WALLET.webp" alt="![Osaifu-Keitai Cards in Wallet]" width=200>
 </p>
 
 
@@ -95,7 +95,7 @@ If you go with a 3) way you should know the following tips:
 3. To delete a system app, you can use [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater). Reboot the system after removing the patch.
 4. To unpack and pack apk into modifyable (SMALI) form, use [apktool](https://ibotpeaches.github.io/Apktool/).
 5. To verify that your SMALI modifications did not break the code, you can decompile the app using [jadx](https://github.com/skylot/jadx) and check that the modifyed code has no errors.
-6. Some Osaifu-Keitati partner apps are geoblocked, I had to use multiple VPNs before it let me provision a some cards.
+6. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision a some cards.
 6. Some apps detect root by tring to invoke Magisk, hide it and add the problematic app into the denylist.
 7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work (for me it didn't).
 8. When following tutorials, watch the tutorial FIRST before starting to follow it. Rewatch multiple times, and follow the video closely in order not to skip an important step.
@@ -114,6 +114,6 @@ This doc has been published to shed light on this issue and try to give some poi
 - Android implementation is much worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
   - CRS?? applet on Android does not notify the operating system about events that happen with the SE, so there are no interaction animations, and balance has to be synchronized inisde apps manually by using the 'refresh' button instead of it being tracked by the OS in the background.
-  - Provisioned "systems" share? same logical space, therefore having multiple services with overlapping service and system codes is not possible, user has to reconfigure the applet each time he wants to enable one of the conflicting systems.
+  - Provisioned "systems" share? same logical space, therefore having multiple services with overlapping service and system codes is not possible, user has to reconfigure 'move to/from mainland' the applet each time he wants to enable one of the conflicting systems.
 
-- During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root.  It is possible that google, other devs such as felicanetworks expand this harware-based check to more apps, thus making root-based methods irreversibly unusable.
+- During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root.  It is possible that google, other devs such as felicanetworks expand this harware-based check to more apps, thus making root-based bypass irreversibly unusable.
