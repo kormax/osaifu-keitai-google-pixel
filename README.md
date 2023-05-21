@@ -101,8 +101,9 @@ If you go with a 3) way you should know the following tips:
 1. If you want to initialize Osaifu-Keitai with Google Wallet, you have to install [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix) in order to pass safetynet. For me it did the job from the get go.
 2. To verify successful SafetyNet attestation, you can use the [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker). It should return PASS.
 3. To delete a system app, you can use [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater). Reboot the system after removing the patch.
-4. To unpack and pack apk into modifyable (SMALI) form, use [apktool](https://ibotpeaches.github.io/Apktool/).
-5. To verify that your SMALI modifications did not break the code, you can decompile the app using [jadx](https://github.com/skylot/jadx) and check that the modifyed code has no errors.
+4. To unpack and pack apk into modifyable [SMALI](https://github.com/google/smali) form, use [apktool](https://ibotpeaches.github.io/Apktool/).
+5. To verify that your SMALI modifications did not break the code, you can decompile the app into java source code using [jadx](https://github.com/skylot/jadx) and check that the modifyed code has no errors.  
+Be aware that this decompilation is lossy and cannot be used for patching.
 6. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision some cards.
 6. Some apps detect root by tring to invoke Magisk. In this case you have to hide Magisk and add the problematic app into the denylist.
 7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work (for me it didn't).
