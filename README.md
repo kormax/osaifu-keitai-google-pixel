@@ -89,9 +89,10 @@ If you go with a 3) way you should know the following tips:
 6. Some Osaifu-Keitati partner apps are geoblocked, I had to use multiple VPNs before it let me provision a some cards.
 6. Some apps detect root by tring to invoke Magisk, hide it and add the problematic app into the denylist.
 7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work (for me it didn't).
+8. When following tutorials, watch the tutorial FIRST before starting to follow it. Rewatch multiple times, and follow the video closely in order not to skip an important step.
 
 If you unroot/reinstall the system after provisioning the services, they'll continue to be available because the Osaifu-Keitai applet (Unlike CarKey applet and etc) is not cleared upon system reset.
-Related applications won't work, but you'll still be able to use the device as if it were a multiple card combo.
+Related applications won't work, but you'll still be able to use the device as if it were a multiple-card combo.
 
 
 # Notes
@@ -100,6 +101,12 @@ Related applications won't work, but you'll still be able to use the device as i
 The biggest probability thus far is licensing requirements, as it is possible that service provider requires a fee for each device that this feature is enabled for.  
 It is also possible that for the sake of economy of scale google manufactures and licenses all devices, but to simplify support the've locked out unused features from other regions.  
 This doc has been published to shed light at this issue and try to give some pointers to the people that want to try and overcome this limitation.
+
+- Android implementation is much worse in comparison to the one Apple has:
+  - Google Wallet app wraps external apps instead of implementing it all on its own.
+  - CRS?? applet on Android does not notify the operating system about events that happen with the SE, so there are no interaction animations, and balance has to be synchronized inisde apps manually by using the 'refresh' button instead of it being tracked by the OS in the background.
+  - Provisioned "systems" share? same logical space, therefore having multiple services with overlapping service and system codes is not possible, user has to reconfigure the applet each time he wants to enable one of the conflicting systems.
+
 
 - During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root.  It is possible that google, other devs such as felicanetworks expand this harware-based check to more apps, thus making root-based methods irreversibly unusable.
 
