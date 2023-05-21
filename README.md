@@ -80,8 +80,8 @@ As rootless solutions have led us to a dead end, we're gonna join the **dark sid
 > I take **NO RESPONSIBILITY** for your actions in case you go forward and fail.
 
 > **Warning**
-> It might seem simpler than it looks.  
-**I've personally had bricked** (but thankfully recovered) my device when unrooting even though i've followed the tutorial step by step (cause Google Flashing Utility crashed during the process).  
+> Anything can go wrong at any time. Everything looks much easier than it ends up in the end.  
+**I've personally had bricked** (but thankfully recovered) my device when unrooting even though i've followed the tutorial step by step.
 
 > **Warning**
 > **I won't** provide a detailed step-by-step guide to discoruage people lacking enough understanding from trying and breaking their devices.
@@ -104,7 +104,7 @@ If you go with a 3) way you should know the following tips:
 4. To unpack and pack apk into modifyable (SMALI) form, use [apktool](https://ibotpeaches.github.io/Apktool/).
 5. To verify that your SMALI modifications did not break the code, you can decompile the app using [jadx](https://github.com/skylot/jadx) and check that the modifyed code has no errors.
 6. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision some cards.
-6. Some apps detect root by tring to invoke Magisk, hide it and add the problematic app into the denylist.
+6. Some apps detect root by tring to invoke Magisk. In this case you have to hide Magisk and add the problematic app into the denylist.
 7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work (for me it didn't).
 8. When following tutorials, watch the tutorial FIRST before starting to follow it. Rewatch multiple times, and follow the video closely in order not to skip an important step.
 
