@@ -24,7 +24,10 @@ If you download the [Osaifu-Keitai](https://play.google.com/store/apps/details?i
 
 Upon apk decompilation and code inspection, we see that this app does following operations that lead to such an exception:
 
-1. Upon start, app looks for a file at system path `/product/etc/felica/common.cfg`. If no file is found. App returns a following error message `This phone doesn't support Osaifu-Keitai function. Close this application`.  
+1. Upon start, app looks for a file at system path:
+`/product/etc/felica/common.cfg`.  
+If no file is found. App returns the following error message:  
+`This phone doesn't support Osaifu-Keitai function. Close this application`.  
 In this case you're SOL and your device or firmware is not compatible anyway.
 
 2. If such a file is found, app reads all entries/keys inside of it and saves them into a hash map. We are interested in following entries:   
@@ -33,10 +36,15 @@ In this case you're SOL and your device or firmware is not compatible anyway.
    * 00000014
 
 3. On UI initialization, application calls `isCheckInbound` method, which then does the following:  
-a) If key 00000018 is available, it checks if its value is "1". If that's the case, app assumes that Osaifu-Keitai is enabled.   
+a) If key 00000018 is available, it checks if its value is "1".  
+If that's the case, app assumes that Osaifu-Keitai is enabled.   
 b) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide/topics/providers/content-providers) URL from key 00000014 and column index 00000015.
 
-4. **This is the moment we are being screwed**. MSM app queries the provider, which in case of Google Pixel has a URL of `content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application. Upon apk inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**. Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning 1 if it is and 0 otherwise.
+4. **This is the moment we are being screwed**.  
+MSM app queries the provider, which in case of Google Pixel has URL:  
+`content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application.  
+Upon apk inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.  
+Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning 1 if it is and 0 otherwise.
 
 5. Upon getting 0, MSM app returns the error code shown on the screenshot.
 
@@ -118,10 +126,14 @@ Related applications won't work, but you'll still be able to use the device as i
 
 # Other notes
 
-- We can only guess why did Google decide to lock global users from this feature.  
+This section comments and thoughts that appeared when researching this topic:
+
+- Goal of this doc is to shed light on this issue and try to give some pointers to the people that want to try and overcome this limitation.
+
+- There is no way to be sure why did Google decide to lock global users from this feature.  
 The biggest probability thus far is licensing requirements, as it is possible that the service provider requires a fee for each device that this feature is enabled for.    
 It is also possible that for the sake of economy of scale google manufactures and licenses all devices, but to simplify support they've locked out unused features from other regions.  
-This doc has been published to shed light on this issue and try to give some pointers to the people that want to try and overcome this limitation.
+
 
 - Android implementation is much worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
