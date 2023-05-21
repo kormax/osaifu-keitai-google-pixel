@@ -7,12 +7,12 @@
 
 # Introduction
 
-This doc describes the way that the Osaifu-Keitai feature is disabled on non-japanese SKUs and gives solutions on how to overcome this **artificial** limitation in order to enable it.
+This doc describes the way that the Osaifu-Keitai feature is disabled on non-japanese Google Pixel SKUs and gives solutions on how to overcome this **artificial** limitation in order to enable it.
 
 [Osaifu-Keitai (おサイフケータイ, Osaifu-Kētai), is the de facto standard mobile payment system in Japan. Osaifu-Keitai services include electronic money, identity card, loyalty card, fare collection of public transits (including railways, buses, and airplanes), or credit card.](https://en.wikipedia.org/wiki/Osaifu-Keitai)
 
 
-# Elligibility and a source of issue
+# Eligibility and a root of the issue
 
 Both Google Pixel 7 and 6 series devices have the required applet provisoned in the SE from the factory, although other models could be supported too. This can be checked in the following manner:
 
@@ -39,7 +39,7 @@ b) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide
 5. Upon getting 0, MSM app returns the error code shown on the screenshot.
 
 
-# Solutions and issues
+# Possible solutions
 
 ## Overcome the limitations without root.
 
@@ -105,15 +105,13 @@ Related applications won't work, but you'll still be able to use the device as i
 # Notes
 
 - We can only guess why did Google decide to lock global users from this feature.  
-The biggest probability thus far is licensing requirements, as it is possible that service provider requires a fee for each device that this feature is enabled for.  
-It is also possible that for the sake of economy of scale google manufactures and licenses all devices, but to simplify support the've locked out unused features from other regions.  
-This doc has been published to shed light at this issue and try to give some pointers to the people that want to try and overcome this limitation.
+The biggest probability thus far is licensing requirements, as it is possible that the service provider requires a fee for each device that this feature is enabled for.    
+It is also possible that for the sake of economy of scale google manufactures and licenses all devices, but to simplify support they've locked out unused features from other regions.  
+This doc has been published to shed light on this issue and try to give some pointers to the people that want to try and overcome this limitation.
 
 - Android implementation is much worse in comparison to the one Apple has:
-  - Google Wallet app wraps external apps instead of implementing it all on its own.
+  - Google Wallet app wraps external apps instead of implementing all functionality on its own.
   - CRS?? applet on Android does not notify the operating system about events that happen with the SE, so there are no interaction animations, and balance has to be synchronized inisde apps manually by using the 'refresh' button instead of it being tracked by the OS in the background.
   - Provisioned "systems" share? same logical space, therefore having multiple services with overlapping service and system codes is not possible, user has to reconfigure the applet each time he wants to enable one of the conflicting systems.
 
-
 - During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root.  It is possible that google, other devs such as felicanetworks expand this harware-based check to more apps, thus making root-based methods irreversibly unusable.
-
