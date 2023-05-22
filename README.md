@@ -4,6 +4,7 @@
  <img src="./assets/OK.INIT.webp" alt="![Video demonstrating OK initialization]" width=200>
  <img src="./assets/OK.SETUP.PASMO.webp" alt="![Video demonstrating PASMO provisioning]" width=200>
 <img src="./assets/OK.WALLET.webp" alt="![Osaifu-Keitai Cards in Wallet]" width=200>
+<img src="./assets/OK.UNROOT.webp" alt="![Osaifu-Keitai After Unrooting]" width=200>
 </p>
 
 
@@ -16,34 +17,34 @@ This doc describes the way that the Osaifu-Keitai feature is disabled on non-jap
 
 # Eligibility and a root of the issue
 
-Both Google Pixel 7 and 6 series devices have the required applet provisoned in the SE from the factory, although other models could be supported too. This can be checked in the following manner:
+Both Google Pixel 7 and 6 series devices have the required applet provisoned in the SE from the factory, although older models could be supported too. This can be checked in the following manner:
 
 If you download the [Osaifu-Keitai](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main) app `com.felicanetworks.mfm.main` and try opening it from a non-japanese model, you'll be presented with a following deceiving error message.
 
  <img src="./assets/OK.INBOUND.UNSUPPORTED.jpg" alt="![Error message which signals that your device does indeed support Osaifu-Keitai but it is disabled]" width=250px>
 
-Upon apk decompilation and code inspection, we see that this app does following operations that lead to such an exception:
+After apk decompilation and code inspection, we see that this app does following operations that lead to this error:
 
-1. Upon start, app looks for a file at system path:
+1. Upon start, application looks for a file at system path:
 `/product/etc/felica/common.cfg`.  
 If no file is found. App returns the following error message:  
 `This phone doesn't support Osaifu-Keitai function. Close this application`.  
-In this case you're SOL and your device or firmware is not compatible anyway.
+If that's the case, the device does not have needed configuration files and in addition lacks the applet or even the SE, so there is no way to overcome that. 
 
-2. If such a file is found, app reads all entries/keys inside of it and saves them into a hash map. We are interested in following entries:   
+2. If a file is found, app reads all entries/keys inside of it and saves them into a hash map. We are interested in following entries:   
    * 00000018
    * 00000015
    * 00000014
 
 3. On UI initialization, application calls `isCheckInbound` method, which then does the following:  
 a) If key 00000018 is available, it checks if its value is "1".  
-If that's the case, app assumes that Osaifu-Keitai is enabled.   
+If that's the case, app assumes that Osaifu-Keitai is available on device.   
 b) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide/topics/providers/content-providers) URL from key 00000014 and column index 00000015.
 
 4. **This is the moment we are being screwed**.  
 MSM app queries the provider, which in case of Google Pixel has URL:  
 `content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application.  
-Upon apk inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.  
+On further APK inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.  
 Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning 1 if it is and 0 otherwise.
 
 5. Upon getting 0, MSM app returns the error code shown on the screenshot.
@@ -98,16 +99,16 @@ This is the way i've done it  (proof in the GIFs at the beginning of this page).
 
 
 If you go with a 3) way you should know the following tips:
-1. If you want to initialize Osaifu-Keitai with Google Wallet, you have to install [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix) in order to pass safetynet. For me it did the job from the get go.
+1. If you want to initialize Osaifu-Keitai with Google Wallet, you have to install [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix) in order to pass SafetyNet. For me it did the job from the get go.
 2. To verify successful SafetyNet attestation, you can use the [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker). It should return PASS.
 3. To delete a system app, you can use [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater). Reboot the system after removing the patch.
 4. To unpack and pack apk into modifyable [SMALI](https://github.com/google/smali) form, use [apktool](https://ibotpeaches.github.io/Apktool/).
 5. To verify that your SMALI modifications did not break the code, you can decompile the app into java source code using [jadx](https://github.com/skylot/jadx) and check that the modifyed code has no errors.  
 Be aware that this decompilation is lossy and cannot be used for patching.
-6. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision some cards.
+6. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision some services.
 6. Some apps detect root by tring to invoke Magisk. In this case you have to hide Magisk and add the problematic app into the denylist.
-7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work (for me it didn't).
-8. When following tutorials, watch the tutorial FIRST before starting to follow it. Rewatch multiple times, and follow the video closely in order not to skip an important step.
+7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work.
+8. When following tutorials, watch/read the tutorial FIRST before going forward with its steps. Rewatch/Reread multiple times, and follow the tutorial closely in order not to skip an important step.
 
 
 # Notes
@@ -121,9 +122,14 @@ Be aware that for Osaifu-Keitai functionality to work with Google Wallet, you ha
 - `com.google.android.gms.pay.sidecar`
 
 
-If you unroot/reinstall the system after provisioning the services, they'll continue to be available because the Osaifu-Keitai applet (Unlike CarKey applet and etc) is not cleared upon system reset.
-Related applications won't work, but you'll still be able to use the device as if it were a multiple-card combo.
+If you unroot/reinstall the system after provisioning the services, they'll continue to be available because the Osaifu-Keitai applet (Unlike CarKey applet and etc) is not cleared upon system reset. So the device will stll act as a super-card with all provisioned services.  
 
+If you reinstall all applications related to Osaifu-Keitai after returning to stock, while the Osaifu-Keitai app itself won't work, other applications will continue to operate. This includes:
+- Google Wallet 
+- Pasmo, Suica  
+- Rakuten, Nanaco, Waon.  
+
+I have not tested if the full functionality is available (topup/new service creation), but those apps at least open and allow to look at provisioned service info.
 
 # Other notes
 
@@ -138,7 +144,7 @@ It is also possible that for the sake of economy of scale google manufactures an
 
 - Android implementation is much worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
-  - CRS?? applet on Android does not notify the operating system about events that happen with the SE, so there are no interaction animations, and balance has to be synchronized inisde apps manually by using the 'refresh' button instead of it being tracked by the OS in the background.
+  - CRS? applet on Android does not notify the operating system about events that happen with the SE, so there are no interaction animations, and balance has to be synchronized inisde apps manually by using the 'refresh' button instead of it being tracked by the OS in the background.
   - Provisioned "systems" share? same logical space, therefore having multiple services with overlapping service and system codes is not possible, user has to reconfigure 'move to/from mainland' on the applet each time he wants to enable one of the conflicting systems.
 
 - Japanese UI of google wallet is much better than global. Displaying payment cards vertically instead of in a horizontal carousel is not only more space-efficient, but also better in terms of UX as opening a credit card "tile" to pay with a particular card requires more intention from the end user, thus preventing payment with a wrong card due to accidental horizontal swipe.
