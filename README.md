@@ -6,7 +6,9 @@
 <img src="./assets/OK.WALLET.webp" alt="![Osaifu-Keitai Cards in Wallet]" width=200>
 <img src="./assets/OK.UNROOT.webp" alt="![Osaifu-Keitai After Unrooting]" width=200>
 </p>
+<sub>GP4BC displayed in GIFs is a global SKU, this particular Pixel 7 Pro was purchased in Germany.</sub>  
 
+<br />  
 
 # Introduction
 
@@ -135,18 +137,19 @@ I have not tested if the full functionality is available (topup/new service crea
 
 This section comments and thoughts that appeared when researching this topic:
 
-- Goal of this doc is to shed light on this issue and try to give some pointers to the people that want to try and overcome this limitation.
+- Goal of this doc is to shed light on feature lock out and try to give some pointers to the people that want to try and overcome this limitation.
 
 - There is no way to be sure why did Google decide to lock global users from this feature.  
-The biggest probability thus far is licensing requirements, as it is possible that the service provider requires a fee for each device that this feature is enabled for.    
-It is also possible that for the sake of economy of scale google manufactures and licenses all devices, but to simplify support they've locked out unused features from other regions.  
+Most probable explanation is that Google does not want to commit enabling this feature for global models, allowing them to switch chips/hardware in the future models without actually "taking" functionality from users.
 
 
 - Android implementation is much worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
-  - CRS? applet on Android does not notify the operating system about events that happen with the SE, so there are no interaction animations, and balance has to be synchronized inisde apps manually by using the 'refresh' button instead of it being tracked by the OS in the background.
+  - System does not display active SE/Felica-related interactions in any meaningful way (animation, sound, vibration), some apps add a button for manual state refresh as the system does not guarantee state synchronization, and the only way to know that something had happened with your service is with a notification that comes after the transaction.  
+  It is either a manifestation of barebones software implementation on the OS side, or a limitation imposed by a CRS/Felica-specific applet.
+  - CRS? applet on Android does not notify the operating system about all? events that happen with the SE, so there are no interaction animations, and balance has to usually be synchronized manually by using the 'refresh' button instead of it being tracked by the OS in the background.
   - Provisioned "systems" share? same logical space, therefore having multiple services with overlapping service and system codes is not possible, user has to reconfigure 'move to/from mainland' on the applet each time he wants to enable one of the conflicting systems.
 
-- Japanese UI of google wallet is much better than global. Displaying payment cards vertically instead of in a horizontal carousel is not only more space-efficient, but also better in terms of UX as opening a credit card "tile" to pay with a particular card requires more intention from the end user, thus preventing payment with a wrong card due to accidental horizontal swipe.
+- Japanese UI of google wallet is better than global one. Displaying payment cards vertically instead of in a horizontal carousel is not only more space-efficient, but also better in terms of UX as opening a credit card "tile" to pay with a particular card requires more intention from the end user, thus preventing payment with a wrong card due to accidental horizontal swipe.
 
-- During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root.  It is possible that google, other devs such as felicanetworks expand this harware-based check to more apps, thus making root-based bypass irreversibly unusable.
+- During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root. It signals the end of time for SafetyNet bypass, as in the near future more devs will start mandating the harware-based check in their apps, thus making root-based bypass irreversibly unusable.
