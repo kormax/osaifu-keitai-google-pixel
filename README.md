@@ -156,3 +156,15 @@ Most probable explanation is that Google does not want to commit enabling this f
 - Japanese UI of google wallet is better than global one. Displaying payment cards vertically instead of in a horizontal carousel is not only more space-efficient, but also better in terms of UX as opening a credit card "tile" to pay with a particular card requires more intention from the end user, thus preventing payment with a wrong card due to accidental horizontal swipe.
 
 - During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root. It signals the end of time for SafetyNet bypass, as in the near future more devs will start mandating the harware-based check in their apps, thus making root-based bypass irreversibly unusable.
+
+
+# References
+
+
+- Analysed applications:
+  - [Osaifu-Keitai application](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main);
+  - [Osaifu-Keitai settings](https://play.google.com/store/apps/details?id=com.felicanetworks.mfs);
+  - [Google Play services for payments](https://play.google.com/store/apps/details?id=com.google.android.gms.pay.sidecar);
+- Sofware analysis and development tools:
+  - [jadx](https://github.com/skylot/jadx)
+  - [apktool](https://ibotpeaches.github.io/Apktool/)
