@@ -10,6 +10,7 @@
 
 <br />  
 
+
 # Introduction
 
 This doc describes the way that the Osaifu-Keitai feature is disabled on non-japanese Google Pixel SKUs and gives solutions on how to overcome this **artificial** limitation in order to enable it.
@@ -133,17 +134,20 @@ If you reinstall all applications related to Osaifu-Keitai after returning to st
 
 I have not tested if the full functionality is available (topup/new service creation), but those apps at least open and allow to look at provisioned service info.
 
-# Other notes
 
-This section comments and thoughts that appeared when researching this topic:
+# Personal comments
 
-- Goal of this doc is to shed light on feature lock out and try to give some pointers to the people that want to try and overcome this limitation.
+
+This section contains comments and thoughts that appeared when researching this topic:
+
+
+- This document was created in order to shed light on feature lock out and try to give some pointers to the people that want to try and overcome this limitation.
 
 - There is no way to be sure why did Google decide to lock global users from this feature.  
 Most probable explanation is that Google does not want to commit enabling this feature for global models, allowing them to switch chips/hardware in the future models without actually "taking" functionality from users.
 
 
-- Android implementation is much worse in comparison to the one Apple has:
+- Android implementation is worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
   - System does not display active SE/Felica-related interactions in any meaningful way (animation, sound, vibration), some apps add a button for manual state refresh as the system does not guarantee state synchronization, and the only way to know that something had happened with your service is with a notification that comes after the transaction.  
   It is either a manifestation of barebones software implementation on the OS side, or a limitation imposed by a CRS/Felica-specific applet.
