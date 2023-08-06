@@ -13,49 +13,55 @@
 
 # Introduction
 
-This doc describes the way that the Osaifu-Keitai feature is disabled on non-japanese Google Pixel SKUs and gives solutions on how to overcome this **artificial** limitation in order to enable it.
+This doc describes the way that the Osaifu-Keitai feature is disabled on non-japanese Google Pixel SKUs and gives solutions on how to overcome this **artificial** limitation in order to enable it.  
+<sub>(TLDR: Need ROOT to modify MID/Felica configuration file or a system app.)</sub>
 
 [Osaifu-Keitai (おサイフケータイ, Osaifu-Kētai), is the de facto standard mobile payment system in Japan. Osaifu-Keitai services include electronic money, identity card, loyalty card, fare collection of public transits (including railways, buses, and airplanes), or credit card.](https://en.wikipedia.org/wiki/Osaifu-Keitai)
 
 
 # Eligibility and a root of the issue
 
-Both Google Pixel 7 and 6 series devices have the required applet provisoned in the SE from the factory, although older models could be supported too. This can be checked in the following manner:
+Both Google Pixel 7 and 6 series devices have the required applet provisoned in the SE from the factory, although older models could be supported too. As for other models, it has to be verified.
 
-If you download the [Osaifu-Keitai](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main) app `com.felicanetworks.mfm.main` and try opening it from a non-japanese model, you'll be presented with a following deceiving error message.
+To verify that your device is supported, download the [Osaifu-Keitai](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main) app `com.felicanetworks.mfm.main` and try opening it. If you're on a non-japanese/unsupported model, you'll be met with one of the following errors:
+1. `This phone doesn't support Osaifu-Keitai function. Close this application`:  
+   This error means that the Osaifu-Keitai applet configuration file has not been found in a system. In this case there is **very little chance to enable support**, as the device most probably lacks required hardware capabilities. The only extra thing to try in this case is installing JP ROM that may have the config, but it wouldn't help if an applet is missing too.
+2. `This app contains configuration files for services in Japan and has no menu items`:  
+  This is the error that should give you hope, as it means that **your device has required applet and configuration files**, but configuration informs the app that it should not allow you in. 
+   <img src="./assets/OK.INBOUND.UNSUPPORTED.jpg" alt="![Error message which signals that your device does indeed support Osaifu-Keitai but it is disabled]" width=250px>
 
- <img src="./assets/OK.INBOUND.UNSUPPORTED.jpg" alt="![Error message which signals that your device does indeed support Osaifu-Keitai but it is disabled]" width=250px>
+After decompiling the APK and inspecting the code, we see that this app does following operations that lead to this error:
 
-After apk decompilation and code inspection, we see that this app does following operations that lead to this error:
+1. Upon start, `isFelicaSupported` method looks for a file at system paths:
+  - `/product/etc/felica/common.cfg`;
+  - `/vendor/etc/felica/common.cfg`;
+  - `/system/etc/felica/common.cfg`.  
+If no file is found. App returns error 1):  
 
-1. Upon start, application looks for a file at system path:
-`/product/etc/felica/common.cfg`.  
-If no file is found. App returns the following error message:  
-`This phone doesn't support Osaifu-Keitai function. Close this application`.  
-If that's the case, the device does not have needed configuration files and in addition lacks the applet or even the SE, so there is no way to overcome that. 
-
-2. If a file is found, app reads all entries/keys inside of it and saves them into a hash map. We are interested in following entries:   
-   * 00000018
-   * 00000015
-   * 00000014
+2. If a file is found, `innerLoad` method reads all entries/keys inside of it and saves them into a hash map . We are interested in following entries:   
+   * `00000018`
+   * `00000015`
+   * `00000014`
 
 3. On UI initialization, application calls `isCheckInbound` method, which then does the following:  
-a) If key 00000018 is available, it checks if its value is "1".  
-If that's the case, app assumes that Osaifu-Keitai is available on device.   
-b) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide/topics/providers/content-providers) URL from key 00000014 and column index 00000015.
+a) If key `00000018` is available, it checks if its value is `1` for success;  
+b) If keys `00000015` and `00000014` are missing too, returns success (thanks to @palBazzi for pointing this out);  
+c) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide/topics/providers/content-providers) URL from key 00000014 and column index 00000015. Application queries the provider, if it returns `1` result is considered a success.  
+If any check returns a failure, app returns error 2).
 
-4. **This is the moment we are being screwed**.  
-MSM app queries the provider, which in case of Google Pixel has URL:  
+*  **This is the moment Pixel users are being screwed**.  
+The provider in case of Google Pixel has URL:  
 `content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application.  
 On further APK inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.  
-Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning 1 if it is and 0 otherwise.
+Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning `1` if it is and `0` otherwise.
 
-5. Upon getting 0, MSM app returns the error code shown on the screenshot.
 
 
 # Possible solutions
 
 ## Overcome the limitations without root.
+
+<sub>TLDR: no proven methods without ROOT.</suv>
 
 Following methods have been unsuccessfuly attempted:
 
@@ -76,6 +82,8 @@ As rootless solutions have led us to a dead end, we're gonna join the **dark sid
 
 
 ## Solutions that require unlocking the bootloader and/or rooting.
+
+<sub>TLDR: ROOT-based solutions work.</suv>
 
 > **Warning**
 > Following solutins should ONLY be attempted if you know what you are doing as it is possible to PERMAMENTELY render your device unusable.
@@ -160,11 +168,15 @@ Most probable explanation is that Google does not want to commit enabling this f
 
 # References
 
-
+- Useful links:
+  - [Converting Japanese Google Pixel to Global version](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/) - information from this thread can be used to do everything in reverse.
+- Tools and applications:
+  - [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix);
+  - [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker);
+  - [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater);
+  - [jadx](https://github.com/skylot/jadx);
+  - [apktool](https://ibotpeaches.github.io/Apktool/);
 - Analysed applications:
   - [Osaifu-Keitai application](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main);
   - [Osaifu-Keitai settings](https://play.google.com/store/apps/details?id=com.felicanetworks.mfs);
-  - [Google Play services for payments](https://play.google.com/store/apps/details?id=com.google.android.gms.pay.sidecar);
-- Sofware analysis and development tools:
-  - [jadx](https://github.com/skylot/jadx)
-  - [apktool](https://ibotpeaches.github.io/Apktool/)
+  - [Google Play services for payments](https://play.google.com/store/apps/details?id=com.google.android.gms.pay.sidecar).
