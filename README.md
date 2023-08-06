@@ -27,16 +27,17 @@ To verify that your device is supported, download the [Osaifu-Keitai](https://pl
 1. `This phone doesn't support Osaifu-Keitai function. Close this application`:  
    This error means that the Osaifu-Keitai applet configuration file has not been found in a system. In this case there is **very little chance to enable support**, as the device most probably lacks required hardware capabilities. The only extra thing to try in this case is installing JP ROM that may have the config, but it wouldn't help if an applet is missing too.
 2. `This app contains configuration files for services in Japan and has no menu items`:  
-  This is the error that should give you hope, as it means that **your device has required applet and configuration files**, but configuration informs the app that it should not allow you in. 
+  This is the error that should give you hope, as it means that **your device has required applet and configuration files**, but configuration informs the app that it should not allow you in.  
    <img src="./assets/OK.INBOUND.UNSUPPORTED.jpg" alt="![Error message which signals that your device does indeed support Osaifu-Keitai but it is disabled]" width=250px>
 
 After decompiling the APK and inspecting the code, we see that this app does following operations that lead to this error:
 
 1. Upon start, `isFelicaSupported` method looks for a file at system paths:
-  - `/product/etc/felica/common.cfg`;
-  - `/vendor/etc/felica/common.cfg`;
-  - `/system/etc/felica/common.cfg`.  
-If no file is found. App returns error 1):  
+    - `/product/etc/felica/common.cfg`;
+    - `/vendor/etc/felica/common.cfg`;
+    - `/system/etc/felica/common.cfg`.   
+
+    If no file is found. App returns error 1):  
 
 2. If a file is found, `innerLoad` method reads all entries/keys inside of it and saves them into a hash map . We are interested in following entries:   
    * `00000018`
