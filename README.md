@@ -185,7 +185,8 @@ Most probable explanation is that Google does not want to commit enabling this f
 # Notes
 
 - If you have any information to add, found an issue/typo, feel free to raise an Issue or create a PR;  
-- I am sorry for not providing a step-by-step tutorial, but it is better not to do one than make an incomplete one, thus luring regular users into a situation where their device may become inoperable due to a mistake made by me. If a full-fledged text-based tutorial or video comes around, I'll surely add a link to it. Meanwhile, assume this info is intended for experienced users only;  
+- At this moment I'm unable to create a comprehensive step-by-step tutorial on how to reproduce my findings. I think that it's better not to publish one at all rather than doing an incomplete/untested/messed up one, thus luring regular users into a situation where their device may become inoperable due to a mistake made by me.  
+If a full-fledged text-based tutorial or video comes around, I'll surely add a link to it. Meanwhile, assume all info provided in this repository is intended for experienced users only;  
 - In case you've been able to re-create the provided steps, feel free to report your success and findings throught the proccess;  
 - [Resources](./resources/README.md) directory contains code snippets of the apps related to Osaifu-Keitai functionality lock-out.
 

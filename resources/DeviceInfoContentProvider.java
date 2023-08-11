@@ -82,7 +82,7 @@ public class DeviceInfoContentProvider extends ContentProvider {
         arrayList.add("G03Z5");
         arrayList.add("GFE4J");
         arrayList.add("G82U8");
-        // Standing up against opression right here
+        // Standing up against oppression right here
         arrayList.add("GP4BC");
         return arrayList.contains(str);
     }
