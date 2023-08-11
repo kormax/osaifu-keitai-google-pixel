@@ -14,7 +14,7 @@
 # Introduction
 
 This doc describes the way that the Osaifu-Keitai feature is disabled on non-japanese Google Pixel SKUs and gives solutions on how to overcome this **artificial** limitation in order to enable it.  
-<sub>(TLDR: Need ROOT to modify MID/Felica configuration file or a system app.)</sub>
+<sub>(TLDR: Need ROOT to modify MID/FeliCa configuration file or a system app.)</sub>
 
 [Osaifu-Keitai (おサイフケータイ, Osaifu-Kētai), is the de facto standard mobile payment system in Japan. Osaifu-Keitai services include electronic money, identity card, loyalty card, fare collection of public transits (including railways, buses, and airplanes), or credit card.](https://en.wikipedia.org/wiki/Osaifu-Keitai)
 
@@ -47,7 +47,7 @@ After decompiling the APK and inspecting the code, we see that this app does fol
 3. On UI initialization, application calls `isCheckInbound` method, which then does the following:  
 a) If key `00000018` is available, it checks if its value is `1` for success;  
 b) If keys `00000015` and `00000014` are missing too, returns success (thanks to @palBazzi for pointing this out);  
-c) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide/topics/providers/content-providers) URL from key 00000014 and column index 00000015. Application queries the provider, if it returns `1` result is considered a success.  
+c) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide/topics/providers/content-providers) URL from key `00000014` and column index `00000015`. Application queries the provider, if it returns `1` result is considered a success.  
 If any check returns a failure, app returns error 2).
 
 *  **This is the moment Pixel users are being screwed**.  
@@ -64,7 +64,7 @@ Inside the source code we see that this app retreives SKU from system build prop
 
 <sub>TLDR: no proven methods without ROOT.</suv>
 
-Following methods have been unsuccessfuly attempted:
+ROOT-less methods **do not work**. This list is provided for reference and to give a possible starting point for people who might want to dig further:
 
 1. Manipulate `com.google.android.pixelnfc`:  
 (FAIL) System apps are well-protected agaist manipulation.  
@@ -77,7 +77,7 @@ Not possible as android requires app overwrites/updates to have the same signatu
 
 2. Manipulate `com.felicanetworks.mfm.main`:  
 (UNKNOWN) This might be possible to do without root, but I did not attempt to finish it to the end as it proved to be too complex lacking any experience with android development.  
-Thing is, `com.felicanetworks.mfm.main` communicates with, `com.felicanetworks.mfc` (Mobile Felica client),  `com.felicanetworks.mfs` (Mobile Felica settings), `com.google.android.gms.pay.sidecar` (Google Play services for payments) which all do mutual signature verification, thus requiring you to patch ALL of those apps for them to work, replacing signatures and fixing API access due to signature changes.
+Thing is, `com.felicanetworks.mfm.main` communicates with, `com.felicanetworks.mfc` (Mobile FeliCa client),  `com.felicanetworks.mfs` (Mobile FeliCa settings), `com.google.android.gms.pay.sidecar` (Google Play services for payments) which all do mutual signature verification, thus requiring you to patch ALL of those apps for them to work, replacing signatures and fixing API access due to signature changes.
 
 As rootless solutions have led us to a dead end, we're gonna join the **dark side**.
 
@@ -86,31 +86,45 @@ As rootless solutions have led us to a dead end, we're gonna join the **dark sid
 
 <sub>TLDR: ROOT-based solutions work.</suv>
 
-> **Warning**
-> Following solutins should ONLY be attempted if you know what you are doing as it is possible to PERMAMENTELY render your device unusable.
+> **Warning**  
+> Following solutins should ONLY be attempted if you know what you are doing as it is possible to PERMAMENTELY render your device unusable.  
+> I assume no responsibility for your actions in case you go forward and encounter an issue.
 
-> **Warning**
-> I take **NO RESPONSIBILITY** for your actions in case you go forward and fail.
-
-> **Warning**
-> Anything can go wrong at any time. Everything looks much easier than it ends up in the end.  
-**I've personally had bricked** (but thankfully recovered) my device when unrooting even though i've followed the tutorial step by step.
-
-> **Warning**
-> **I won't** provide a detailed step-by-step guide to discoruage people lacking enough understanding from trying and breaking their devices.
+> **Warning**  
+> This section **consciously** does not provide a detailed step-by-step guide to discourage people lacking enough understanding from trying and breaking their devices.  
+If someone creates a full-fledged tutorial, links and references to them will be added here.
 
 Let's look at root-based solutions, some of which were tested and work:
 
-1. It is possible to permamently modify the model ID (aka MID) of Google Pixel devices using custom recovery or Root+Magisk so that they pass the check.  
-I did not try this method so i have nothing to say. In case you are interested, read [this forum topic at XDA](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/).  
-The upside is that this solution is permament and does not require root (so no SafetyNet cat and mouse and you can get OTA).  
-The downside is that you get shutter sound and that some cellular bands used in your region might be disabled for JP.
-2. It is possible to create a Magisk module that replaces `/product/etc/felica/common.cfg` file with the one that links to your own provider or has the 00000018 key set to 1, thus making your device pass all checks.
-3. Using root and magisk, you can fully [delete](https://github.com/sunilpaulmathew/De-Bloater) the original `com.google.android.pixelnfc` apk, and upload a patched one that returns successful check on every request. As MSM does not check its signature (cause as of now there is no way for it to do so) everything works from the get go.  
-This is the way i've done it  (proof in the GIFs at the beginning of this page).
+1. It is possible to permamently modify the model ID (aka MID) of Google Pixel devices using custom recovery or Root+ Magisk so that they pass the check.  
+For more details, read [this forum topic at XDA](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/).  
+  This solution has following upsides:
+    - It does not require keeping ROOT, so no SafetyNet cat and mouse and you can get OTA.  
+    - Easy to reproduce by following tips presented in source thread;
 
+    But there are also downsides:
+    - You get shutter sound and that some cellular bands used in your region might be disabled for JP.
+    - Modifying MID is not a safe operation, with an even increased risk of bricking a device if something goes wrong in comparison to ROOT;  
+    - Currently available MID patcher script contains big binary data blobs and pieces of undocumented code inside of `update-binary` file.  
+    I lack required expertise to fully asses safety and correctness of that script, so the only assurance in this case is the high forum reputation of its creator.  
+    There are no implications it's malicious, but if you're uncomfortable with this fact, it's adviced to look at the other two solutions. (This is the reason why I did the other ones, personally).
+2. Creating a magisk module that modifies FeliCa configuration file:  
+    1. With the `00000018` key set to `1`;
+    2. With keys `00000015` and `00000014` pointing to the provider created by your own app. Harder than 1).  
 
-If you go with a 3) way you should know the following tips:
+    This solution has following upsides:
+      - Safer to try around;
+      - .1) can be done without programming experience.
+
+    And following downsides:
+      - Requires keeping ROOT for retaining access to the Osaifu-Keitai app. Need to play the SafetyNet survival horror game in order to keep access to Google Wallet.
+3. By [removing](https://github.com/sunilpaulmathew/De-Bloater) the original `com.google.android.pixelnfc` apk and uploading a patched one that returns successful check on every request. As MSM does not check its signature (cause as of now there is no way for it to do so) everything works from the get go.  
+This is the way i've done it (proof in the GIFs at the beginning of this page).
+This soultion has the same upsides and downsides as 2), although more complex to replicate.
+
+My personal advice is to go with solution 2.1), as it does not require you to make any modifications to software and/or create your own one.
+
+If you go with 2) or 3), you should know the following tips:
 1. If you want to initialize Osaifu-Keitai with Google Wallet, you have to install [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix) in order to pass SafetyNet. For me it did the job from the get go.
 2. To verify successful SafetyNet attestation, you can use the [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker). It should return PASS.
 3. To delete a system app, you can use [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater). Reboot the system after removing the patch.
@@ -123,7 +137,9 @@ Be aware that this decompilation is lossy and cannot be used for patching.
 8. When following tutorials, watch/read the tutorial FIRST before going forward with its steps. Rewatch/Reread multiple times, and follow the tutorial closely in order not to skip an important step.
 
 
-# Notes
+# Extras
+
+## Enabling japanese Google Wallet
 
 In order to enable japanese Google Wallet UI, you have to install `com.felicanetworks.mfc` and turn on japanese VPN. After a couple of minutes the wallet app should go into "Updating" state, in a couple of minutes after that it will start up with a new japanese UI.   
 
@@ -134,21 +150,20 @@ Be aware that for Osaifu-Keitai functionality to work with Google Wallet, you ha
 - `com.google.android.gms.pay.sidecar`
 
 
-If you unroot/reinstall the system after provisioning the services, they'll continue to be available because the Osaifu-Keitai applet (Unlike CarKey applet and etc) is not cleared upon system reset. So the device will stll act as a super-card with all provisioned services.  
+## Keeping provisioned service upon unroot
+
+If you unroot/reinstall the system after provisioning the services, they'll continue to be available because the Osaifu-Keitai applet (Unlike CarKey applet and etc) is not cleared upon system reset. So the device will continue to act as a super-card with all provisioned services.  
 
 If you reinstall all applications related to Osaifu-Keitai after returning to stock, while the Osaifu-Keitai app itself won't work, other applications will continue to operate. This includes:
-- Google Wallet 
-- Pasmo, Suica  
+- Google Wallet;
+- Pasmo, Suica;
 - Rakuten, Nanaco, Waon.  
 
 I have not tested if the full functionality is available (topup/new service creation), but those apps at least open and allow to look at provisioned service info.
 
-
-# Personal comments
-
+## Observations
 
 This section contains comments and thoughts that appeared when researching this topic:
-
 
 - This document was created in order to shed light on feature lock out and try to give some pointers to the people that want to try and overcome this limitation.
 
@@ -158,13 +173,21 @@ Most probable explanation is that Google does not want to commit enabling this f
 
 - Android implementation is worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
-  - System does not display active SE/Felica-related interactions in any meaningful way (animation, sound, vibration), some apps add a button for manual state refresh as the system does not guarantee state synchronization, and the only way to know that something had happened with your service is with a notification that comes after the transaction.  
-  It is either a manifestation of barebones software implementation on the OS side, or a limitation imposed by a CRS/Felica-specific applet.
+  - System does not display active SE/FeliCa-related interactions in any meaningful way (animation, sound, vibration), some apps add a button for manual state refresh as the system does not guarantee state synchronization, and the only way to know that something had happened with your service is with a notification that comes after the transaction.  
+  It is either a manifestation of barebones software implementation on the OS side, or a limitation imposed by a CRS/FeliCa-specific applet.
   - Provisioned "systems" share? same logical space, therefore having multiple services with overlapping service and system codes is not possible, user has to reconfigure 'move to/from mainland' on the applet each time he wants to enable one of the conflicting systems.
 
 - Japanese UI of google wallet is better than global one. Displaying payment cards vertically instead of in a horizontal carousel is not only more space-efficient, but also better in terms of UX as opening a credit card "tile" to pay with a particular card requires more intention from the end user, thus preventing payment with a wrong card due to accidental horizontal swipe.
 
 - During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root. It signals the end of time for SafetyNet bypass, as in the near future more devs will start mandating the harware-based check in their apps, thus making root-based bypass irreversibly unusable.
+
+
+# Notes
+
+- If you have any information to add, found an issue/typo, feel free to raise an Issue or create a PR;  
+- I am sorry for not providing a step-by-step tutorial, but it is better not to do one than make an incomplete one, thus luring regular users into a situation where their device may become inoperable due to a mistake made by me. If a full-fledged text-based tutorial or video comes around, I'll surely add a link to it. Meanwhile, assume this info is intended for experienced users only;  
+- In case you've been able to re-create the provided steps, feel free to report your success and findings throught the proccess;  
+- [Resources](./resources/README.md) directory contains code snippets of the apps related to Osaifu-Keitai functionality lock-out.
 
 
 # References
@@ -176,7 +199,7 @@ Most probable explanation is that Google does not want to commit enabling this f
   - [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker);
   - [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater);
   - [jadx](https://github.com/skylot/jadx);
-  - [apktool](https://ibotpeaches.github.io/Apktool/);
+  - [apktool](https://ibotpeaches.github.io/Apktool/).
 - Analysed applications:
   - [Osaifu-Keitai application](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main);
   - [Osaifu-Keitai settings](https://play.google.com/store/apps/details?id=com.felicanetworks.mfs);
