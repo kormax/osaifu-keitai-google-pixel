@@ -53,9 +53,9 @@ If any check returns a failure, app returns error 2).
 *  **This is the moment Pixel users are being screwed**.  
 The provider in case of Google Pixel has URL:  
 `content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application.  
-On further APK inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.  
-Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning `1` if it is and `0` otherwise.
-
+On APK inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.    
+Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning `1` if it is and `0` otherwise.  
+It's important to reiterate: **this app actually makes your device worse**, it's not responsible for proper NFC operation in any way. It's just a malicious piece of bloatware. 
 
 
 # Possible solutions
@@ -167,10 +167,12 @@ This section contains comments and thoughts that appeared when researching this 
 
 - This document was created in order to shed light on feature lock out and try to give some pointers to the people that want to try and overcome this limitation.
 
-- There is no way to be sure why did Google decide to lock global users from this feature.  
-Most probable explanation is that Google does not want to commit enabling this feature for global models, allowing them to switch chips/hardware in the future models without actually "taking" functionality from users.
-
-
+- There is no way to be fully sure why Google decided to lock global users out of using this feature.  
+In my opinion, the following explanations, even with some overlap, could be valid:
+  1. Google does not want to commit enabling Osaifu-Keitai for global markets where this feature is not required, allowing them to switch up chip/hardware suppliers in the future models without actually "taking back" any functionality from users.
+  2. Google may not want to promote "closed" Osaifu-Keitai solution, trying to push FeliCa networks into implementing/allowing support via [Android Ready SE Alliance](https://developers.google.com/android/security/android-ready-se), which could be beneficial as it would give Google more contol in terms of software and UX, similarly to the way it was done by Apple;  
+  3. Google did not pay licensing fees for non-japanese models, even though all chips come preconfigured, so they are obliged by contractual obligations to attempt to lock unlicensed devices out;  
+  4. Lack of proper communication by development teams who are/were unaware of this capability in global models.  
 - Android implementation is worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
   - System does not display active SE/FeliCa-related interactions in any meaningful way (animation, sound, vibration), some apps add a button for manual state refresh as the system does not guarantee state synchronization, and the only way to know that something had happened with your service is with a notification that comes after the transaction.  
@@ -194,7 +196,8 @@ If a full-fledged text-based tutorial or video comes around, I'll surely add a l
 # References
 
 - Useful links:
-  - [Converting Japanese Google Pixel to Global version](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/) - information from this thread can be used to do everything in reverse.
+  - [Converting Japanese Google Pixel to Global version](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/) - information from this thread can be used to do everything in reverse;
+  - [Android Ready SE Alliance](https://developers.google.com/android/security/android-ready-se). 
 - Tools and applications:
   - [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix);
   - [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker);
