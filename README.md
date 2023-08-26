@@ -19,7 +19,7 @@ This doc describes the way that the Osaifu-Keitai feature is disabled on non-jap
 [Osaifu-Keitai (おサイフケータイ, Osaifu-Kētai), is the de facto standard mobile payment system in Japan. Osaifu-Keitai services include electronic money, identity card, loyalty card, fare collection of public transits (including railways, buses, and airplanes), or credit card.](https://en.wikipedia.org/wiki/Osaifu-Keitai)
 
 
-# Eligibility and a root of the issue
+# Eligibility and the root of the issue
 
 Both Google Pixel 7 and 6 series devices have the required applet provisoned in the SE from the factory, although older models could be supported too. As for other models, it has to be verified.
 
