@@ -55,7 +55,7 @@ The provider in case of Google Pixel has URL:
 `content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application.  
 On APK inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.    
 Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning `1` if it is and `0` otherwise.  
-It's important to reiterate: **this app actually makes your device worse**, it's not responsible for proper NFC operation in any way. From point of view of a regular user, it's just a malicious piece of bloatware. 
+It's important to reiterate: **this app actually makes your device worse**, it's not responsible for proper NFC operation in any way. From point of view of a regular user, it's just a malicious piece of bloatware. The only justification for its existence could lie in the business/contractual side of things.  
 
 
 # Possible solutions
