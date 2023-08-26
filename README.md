@@ -62,19 +62,19 @@ In conclusion, **this app actually makes your device worse**. It's not responsib
 
 <sub>TLDR: no proven methods without ROOT.</suv>
 
-ROOT-less methods **do not work**. This list is provided for reference and to give a possible starting point for people who might want to dig further:
+**No known working ROOT-less methods**.  
+Following list is provided for reference and to give a possible starting point for people who might want to dig further:
 
 1. Manipulate `com.google.android.pixelnfc`:  
-(FAIL) System apps are well-protected agaist manipulation.  
-1.1. Let's uninstall this app:  
-It is a system application and thus cannot be uninstalled.  
-1.2. Install my own app with same provider URL:  
-You cannot install a new application that declares a provider with conflicting URL untill you uninstall an old one.  
-1.3. Decompile and patch the apk, adding your SKU to whitelist:  
-Not possible as android requires app overwrites/updates to have the same signature.
-
+  (Failure) System apps are well-protected agaist manipulation.
+    1. Uninstall this app:  
+    (Failure) It is a system application and thus cannot be uninstalled.  
+    2. Install your own app with same provider URL:  
+    (Failure) You cannot install a new application that declares a provider with conflicting URL untill you uninstall an old one.  
+    3. Decompile and patch the apk, adding your SKU to whitelist:  
+    (Failure) Not possible as Android requires app overwrites/updates to have the same signature.
 2. Manipulate `com.felicanetworks.mfm.main`:  
-(UNKNOWN) This might be possible to do without root, but I did not attempt to finish it to the end as it proved to be too complex lacking any experience with android development.  
+(Theory) This might be possible to do without root, but I did not attempt to finish it to the end as it proved to be too complex lacking any experience with Android development.  
 Thing is, `com.felicanetworks.mfm.main` communicates with, `com.felicanetworks.mfc` (Mobile FeliCa client),  `com.felicanetworks.mfs` (Mobile FeliCa settings), `com.google.android.gms.pay.sidecar` (Google Play services for payments) which all do mutual signature verification, thus requiring you to patch ALL of those apps for them to work, replacing signatures and fixing API access due to signature changes.
 
 As rootless solutions have led us to a dead end, we're gonna join the **dark side**.
@@ -94,16 +94,16 @@ If someone creates a full-fledged tutorial, links and references to them will be
 
 Let's look at root-based solutions, some of which were tested and work:
 
-1. (Verified) It is possible to permamently modify the model ID (aka MID) of Google Pixel devices using custom recovery or Root+ Magisk so that they pass the check.  
+1. (Success) It is possible to permamently modify the model ID (aka MID) of Google Pixel devices using custom recovery or Root+ Magisk so that they pass the check.  
 For more details, read [this forum topic at XDA](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/).  
   This solution has following upsides:
-    - It does not require keeping ROOT, so no SafetyNet cat and mouse and you can get OTA.  
-    - Easy to reproduce by following tips presented in source thread;
+    - It does not require keeping ROOT, so no SafetyNet cat and mouse and you can get OTA;  
+    - Easy to reproduce by following tips presented in source thread.
 
     But there are also downsides:
     - You get shutter sound and that some cellular bands used in your region might be disabled for JP.
     - Modifying MID is not a safe operation, with an even increased risk of bricking a device if something goes wrong in comparison to ROOT;  
-    - Currently available MID patcher script contains big binary data blobs and pieces of undocumented code inside of `update-binary` file.  
+    - Currently available MID patcher script contains big binary data blobs (which are probably just blocks of model-specific configuration data) and pieces of undocumented code inside of `update-binary` file.  
     I lack required expertise to fully asses safety and correctness of that script, so the only assurance in this case is the high forum reputation of its creator.  
     There are no implications it's malicious, but if you're uncomfortable with this fact, it's adviced to look at the other two solutions. (This is the reason why I did the other ones, personally).
 2. Creating a magisk module that modifies FeliCa configuration file:  
@@ -116,23 +116,25 @@ For more details, read [this forum topic at XDA](https://forum.xda-developers.co
 
     And following downsides:
       - Requires keeping ROOT for retaining access to the Osaifu-Keitai app. Need to play the SafetyNet survival horror game in order to keep access to Google Wallet.
-3. (Verified) By [removing](https://github.com/sunilpaulmathew/De-Bloater) the original `com.google.android.pixelnfc` apk and uploading a patched one that returns successful check on every request. As MSM does not check its signature (cause as of now there is no way for it to do so) everything works from the get go.  
+3. (Success) By [removing](https://github.com/sunilpaulmathew/De-Bloater) the original `com.google.android.pixelnfc` apk and uploading a patched one that returns successful check on every request. As MSM does not check its signature (cause as of now there is no way for it to do so) everything works from the get go.  
 This is the way i've done it (proof in the GIFs at the beginning of this page).
 This soultion has the same upsides and downsides as 2), although more complex to replicate.
 
 My personal advice is to go with solution 2.1), as it does not require you to make any modifications to software and/or create your own one.
 
 If you go with 2) or 3), you should know the following tips:
-1. If you want to initialize Osaifu-Keitai with Google Wallet, you have to install [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix) in order to pass SafetyNet. For me it did the job from the get go.
-2. To verify successful SafetyNet attestation, you can use the [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker). It should return PASS.
-3. To delete a system app, you can use [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater). Reboot the system after removing the patch.
-4. To unpack and pack apk into modifyable [SMALI](https://github.com/google/smali) form, use [apktool](https://ibotpeaches.github.io/Apktool/).
-5. To verify that your SMALI modifications did not break the code, you can decompile the app into java source code using [jadx](https://github.com/skylot/jadx) and check that the modifyed code has no errors.  
-Be aware that this decompilation is lossy and cannot be used for patching.
-6. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision some services.
-6. Some apps detect root by tring to invoke Magisk. In this case you have to hide Magisk and add the problematic app into the denylist.
-7. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work.
-8. When following tutorials, watch/read the tutorial FIRST before going forward with its steps. Rewatch/Reread multiple times, and follow the tutorial closely in order not to skip an important step.
+1. If you want to initialize Osaifu-Keitai with Google Wallet, you have to install [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix) in order to pass SafetyNet. For me it did the job from the get go;
+2. To verify successful SafetyNet attestation, you can use the [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker). It should return PASS;
+3. To delete a system app, you can use [De-Bloater](https://github.com/sunilpaulmathew/De-Bloater). Reboot the system after removing the patch;
+4. To unpack and pack apk into modifyable [SMALI](https://github.com/google/smali) form, use [apktool](https://ibotpeaches.github.io/Apktool/);
+5. To verify that your SMALI modifications did not break the code, you can decompile the app into java source code using [jadx](https://github.com/skylot/jadx) and check that the modifyed code has no errors; 
+Be aware that this decompilation is lossy and cannot be used for patching;
+6. To sideload required apps to your device in case they aren't available on Play Store, use APKMirror or APKPure. Beware most APK upload sites allow user contributions, so be careful when selecting which app to download as protections are not failproof.  
+Best alternative to those sites is Aurora Store, which allows to spoof any device/client/region in order to download required app directly from Google's servers. Beware that Google isn't really happy about it as it breaks their TOS, so you might encounter problems using it. Moreover, don't not use your personal account with it; 
+7. Some Osaifu-Keitai partner apps are geoblocked, I had to use multiple VPNs before it let me provision some services;
+8. Some apps detect root by tring to invoke Magisk. In this case you have to hide Magisk and add the problematic app into the denylist;
+9. If you plan on unrooting, DO NOT lock the bootloader before verifying that an unrooted install is bootable. You can use recovery if direct factory image flashing does not work;
+10. When following tutorials, watch/read the tutorial FIRST before going forward with its steps. Rewatch/Reread multiple times, and follow the tutorial closely in order not to skip an important step.
 
 
 # Extras
@@ -196,6 +198,11 @@ If a full-fledged text-based tutorial or video comes around, I'll surely add a l
 - Useful links:
   - [Converting Japanese Google Pixel to Global version](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/) - information from this thread can be used to do everything in reverse;
   - [Android Ready SE Alliance](https://developers.google.com/android/security/android-ready-se). 
+- Tools or websites to download APK files with:
+  - [Aurora Store](https://auroraoss.com) - best solution for downloading fresh and secure APKs that are not allowed for your region and/or device model.  
+  Violates Google's TOS, strongly adviced not to use personal Google account with it, instead try anonymous mode or a throwaway account;
+  - [APKMirror](https://www.apkmirror.com);
+  - [APKPure](https://apkpure.com).
 - Tools and applications:
   - [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix);
   - [YASNAC](https://play.google.com/store/apps/details?id=rikka.safetynetchecker);
