@@ -94,7 +94,7 @@ If someone creates a full-fledged tutorial, links and references to them will be
 
 Let's look at root-based solutions, some of which were tested and work:
 
-1. It is possible to permamently modify the model ID (aka MID) of Google Pixel devices using custom recovery or Root+ Magisk so that they pass the check.  
+1. (Verified) It is possible to permamently modify the model ID (aka MID) of Google Pixel devices using custom recovery or Root+ Magisk so that they pass the check.  
 For more details, read [this forum topic at XDA](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/).  
   This solution has following upsides:
     - It does not require keeping ROOT, so no SafetyNet cat and mouse and you can get OTA.  
@@ -107,8 +107,8 @@ For more details, read [this forum topic at XDA](https://forum.xda-developers.co
     I lack required expertise to fully asses safety and correctness of that script, so the only assurance in this case is the high forum reputation of its creator.  
     There are no implications it's malicious, but if you're uncomfortable with this fact, it's adviced to look at the other two solutions. (This is the reason why I did the other ones, personally).
 2. Creating a magisk module that modifies FeliCa configuration file:  
-    1. With the `00000018` key set to `1`;
-    2. With keys `00000015` and `00000014` pointing to the provider created by your own app. Harder than 1).  
+    1. (Theory) With the `00000018` key set to `1`;
+    2. (Theory) With keys `00000015` and `00000014` pointing to the provider created by your own app. Harder than 1).  
 
     This solution has following upsides:
       - Safer to try around;
@@ -116,7 +116,7 @@ For more details, read [this forum topic at XDA](https://forum.xda-developers.co
 
     And following downsides:
       - Requires keeping ROOT for retaining access to the Osaifu-Keitai app. Need to play the SafetyNet survival horror game in order to keep access to Google Wallet.
-3. By [removing](https://github.com/sunilpaulmathew/De-Bloater) the original `com.google.android.pixelnfc` apk and uploading a patched one that returns successful check on every request. As MSM does not check its signature (cause as of now there is no way for it to do so) everything works from the get go.  
+3. (Verified) By [removing](https://github.com/sunilpaulmathew/De-Bloater) the original `com.google.android.pixelnfc` apk and uploading a patched one that returns successful check on every request. As MSM does not check its signature (cause as of now there is no way for it to do so) everything works from the get go.  
 This is the way i've done it (proof in the GIFs at the beginning of this page).
 This soultion has the same upsides and downsides as 2), although more complex to replicate.
 
