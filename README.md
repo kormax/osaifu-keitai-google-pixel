@@ -54,7 +54,7 @@ If any check returns a failure, app returns error 2).
 The provider in case of Google Pixel has URL:  
 `content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application.  
 Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning `1` if it is and `0` otherwise to the application that queries the provider.  
-In conclusion, **this app actually makes your device worse**. It's not responsible for proper NFC operation in any way, unlike what the name may lead people to think, as it only serves as a feature lock.
+In conclusion, **this app actually makes your device worse**. It's not responsible for proper NFC operation in any way, unlike what the name may lead people to think. Its only purpose is tell Osaifu-Keitai app if it should or shouldn't let you in.
 
 # Possible solutions
 
