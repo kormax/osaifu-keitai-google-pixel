@@ -53,10 +53,8 @@ If any check returns a failure, app returns error 2).
 *  **This is the moment Pixel users are being screwed**.  
 The provider in case of Google Pixel has URL:  
 `content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application.  
-On APK inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.    
-Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning `1` if it is and `0` otherwise.  
-It's important to reiterate: **this app actually makes your device worse**, it's not responsible for proper NFC operation in any way. From point of view of a regular user, it's just a malicious piece of bloatware. The only justification for its existence could lie in the business/contractual side of things.  
-
+Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning `1` if it is and `0` otherwise to the application that queries the provider.  
+In conclusion, **this app actually makes your device worse**. It's not responsible for proper NFC operation in any way, unlike what the name may lead people to think, as it only serves as a feature lock.
 
 # Possible solutions
 
@@ -181,7 +179,7 @@ In my opinion, the following explanations, even with some overlap, could be vali
 
 - Japanese UI of google wallet is better than global one. Displaying payment cards vertically instead of in a horizontal carousel is not only more space-efficient, but also better in terms of UX as opening a credit card "tile" to pay with a particular card requires more intention from the end user, thus preventing payment with a wrong card due to accidental horizontal swipe.
 
-- During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root. It signals the end of time for SafetyNet bypass, as in the near future more devs will start mandating the harware-based check in their apps, thus making root-based bypass irreversibly unusable.
+- During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root. It signals the end of time for SafetyNet bypass, as in the near future more devs will start mandating the hardware-based check in their apps, thus making root-based bypass irreversibly unusable.
 
 
 # Notes
