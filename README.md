@@ -55,7 +55,7 @@ The provider in case of Google Pixel has URL:
 `content://com.google.android.pixelnfc.provider.DeviceInfoContentProvider/isJapanSku`, which corresponds to `com.google.android.pixelnfc` application.  
 On APK inspection we can see that **the ONLY purpose of this app is to return 0 for non-japanese SKUs, thus forbidding you from using this feature**.    
 Inside the source code we see that this app retreives SKU from system build props and checks if it is in a whitelist using the `isDeviceJapanSku` method, returning `1` if it is and `0` otherwise.  
-It's important to reiterate: **this app actually makes your device worse**, it's not responsible for proper NFC operation in any way. It's just a malicious piece of bloatware. 
+It's important to reiterate: **this app actually makes your device worse**, it's not responsible for proper NFC operation in any way. From point of view of a regular user, it's just a malicious piece of bloatware. 
 
 
 # Possible solutions
@@ -172,7 +172,7 @@ In my opinion, the following explanations, even with some overlap, could be vali
   1. Google does not want to commit enabling Osaifu-Keitai for global markets where this feature is not required, allowing them to switch up chip/hardware suppliers in the future models without actually "taking back" any functionality from users.
   2. Google may not want to promote "closed" Osaifu-Keitai solution, trying to push FeliCa networks into implementing/allowing support via [Android Ready SE Alliance](https://developers.google.com/android/security/android-ready-se), which could be beneficial as it would give Google more contol in terms of software and UX, similarly to the way it was done by Apple;  
   3. Google did not pay licensing fees for non-japanese models, even though all chips come preconfigured, so they are obliged by contractual obligations to attempt to lock unlicensed devices out;  
-  4. Lack of proper communication by development teams who are/were unaware of this capability in global models.  
+  4. Lack of proper communication between development teams who are/were unaware of this capability in global models.  
 - Android implementation is worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
   - System does not display active SE/FeliCa-related interactions in any meaningful way (animation, sound, vibration), some apps add a button for manual state refresh as the system does not guarantee state synchronization, and the only way to know that something had happened with your service is with a notification that comes after the transaction.  
