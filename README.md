@@ -1,4 +1,4 @@
-# Enabling Osaifu-Keitai feature on non-japanese Google Pixel smartphones
+# Enabling Osaifu-Keitai feature on non-Japanese Google Pixel smartphones
 
 <p float="left">
  <img src="./assets/OK.INIT.webp" alt="![Video demonstrating OK initialization]" width=200>
@@ -13,7 +13,7 @@
 
 # Introduction
 
-This doc describes the way that the Osaifu-Keitai feature is disabled on non-japanese Google Pixel SKUs and gives solutions on how to overcome this **artificial** limitation in order to enable it.  
+This doc describes the way that the Osaifu-Keitai feature is disabled on non-Japanese Google Pixel SKUs and gives solutions on how to overcome this **artificial** limitation in order to enable it.  
 <sub>(TLDR: Need ROOT to modify MID/FeliCa configuration file or a system app.)</sub>
 
 [Osaifu-Keitai (おサイフケータイ, Osaifu-Kētai), is the de facto standard mobile payment system in Japan. Osaifu-Keitai services include electronic money, identity card, loyalty card, fare collection of public transits (including railways, buses, and airplanes), or credit card.](https://en.wikipedia.org/wiki/Osaifu-Keitai)
@@ -21,11 +21,15 @@ This doc describes the way that the Osaifu-Keitai feature is disabled on non-jap
 
 # Eligibility and the root of the issue
 
-Both Google Pixel 7 and 6 series devices have the required applet provisoned in the SE from the factory, although older models could be supported too. As for other models, it has to be verified.
+The only real limiting factor for Osaifu-Keitai support is a requirement for one of the following to be present on a device:
+1) Dedicated Mobile FeliCa chip or NFC SWP support for FeliCa SIM `FelicaRf` (original, old implementation);
+2) Global Platform based Secure Element with FeliCa applet `FelicaGp` (new implementation).
 
-To verify that your device is supported, download the [Osaifu-Keitai](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main) app `com.felicanetworks.mfm.main` and try opening it. If you're on a non-japanese/unsupported model, you'll be met with one of the following errors:
+Both Google Pixel 7 and 6 series devices have the required FeliCa applet provisoned into the Secure Element (SE) from the factory regardless of target region. As for other models, they have to be verified separately.
+
+To verify that your device is supported, download the [Osaifu-Keitai](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main) app `com.felicanetworks.mfm.main` and try opening it. If you're on a non-Japanese/unsupported model, you'll be met with one of the following errors:
 1. `This phone doesn't support Osaifu-Keitai function. Close this application`:  
-   This error means that the Osaifu-Keitai applet configuration file has not been found in a system. In this case there is **very little chance to enable support**, as the device most probably lacks required hardware capabilities. The only extra thing to try in this case is installing JP ROM that may have the config, but it wouldn't help if an applet is missing too.
+   This error means that the Osaifu-Keitai configuration file has not been found in a system. In this case there is **very little chance to enable support**, as the device most probably lacks required hardware capabilities. The only extra thing to try in this case is installing JP ROM that may have the config, but it wouldn't help if an applet is missing too.
 2. `This app contains configuration files for services in Japan and has no menu items`:  
   This is the error that should give you hope, as it means that **your device has required applet and configuration files**, but configuration informs the app that it should not allow you in.  
    <img src="./assets/OK.INBOUND.UNSUPPORTED.jpg" alt="![Error message which signals that your device does indeed support Osaifu-Keitai but it is disabled]" width=250px>
@@ -139,9 +143,9 @@ Best alternative to those sites is Aurora Store, which allows to spoof any devic
 
 # Extras
 
-## Enabling japanese Google Wallet
+## Enabling Japanese Google Wallet
 
-In order to enable japanese Google Wallet UI, you have to install `com.felicanetworks.mfc` and turn on japanese VPN. After a couple of minutes the wallet app should go into "Updating" state, in a couple of minutes after that it will start up with a new japanese UI.   
+In order to enable Japanese Google Wallet UI, you have to install `com.felicanetworks.mfc` and turn on Japanese VPN. After a couple of minutes the wallet app should go into "Updating" state, in a couple of minutes after that it will start up with a new Japanese UI.   
 
 Be aware that for Osaifu-Keitai functionality to work with Google Wallet, you have to install all following applications:  
 - `com.felicanetworks.mfm.main` 
@@ -171,7 +175,7 @@ This section contains comments and thoughts that appeared when researching this 
 In my opinion, the following explanations, even with some overlap, could be valid:
   1. Google does not want to commit enabling Osaifu-Keitai for global markets where this feature is not required, allowing them to switch up chip/hardware suppliers in the future models without actually "taking back" any functionality from users.
   2. Google may not want to promote "closed" Osaifu-Keitai solution, trying to push FeliCa networks into implementing/allowing support via [Android Ready SE Alliance](https://developers.google.com/android/security/android-ready-se), which could be beneficial as it would give Google more contol in terms of software and UX, similarly to the way it was done by Apple;  
-  3. Google did not pay licensing fees for non-japanese models, even though all chips come preconfigured, so they are obliged by contractual obligations to attempt to lock unlicensed devices out;  
+  3. Google did not pay licensing fees for non-Japanese models, even though all chips come preconfigured, so they are obliged by contractual obligations to attempt to lock unlicensed devices out;  
   4. Lack of proper communication between development teams who are/were unaware of this capability in global models.  
 - Android implementation is worse in comparison to the one Apple has:
   - Google Wallet app wraps external apps instead of implementing all functionality on its own.
@@ -198,6 +202,11 @@ If a full-fledged text-based tutorial or video comes around, I'll surely add a l
 - Useful links:
   - [Converting Japanese Google Pixel to Global version](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/) - information from this thread can be used to do everything in reverse;
   - [Android Ready SE Alliance](https://developers.google.com/android/security/android-ready-se). 
+- Secure Element, FeliCa info:
+  - [Mobile FeliCa Platform](https://www.felicanetworks.co.jp/en/mfelica_pf.html);
+  - [FeliCa FAST certification](https://www.felicanetworks.co.jp/en/security_cert/);
+  - [Trust CB - FAST](https://www.trustcb.com/global-ticketing/fast/);
+  - [Global Platform Card Specification](https://globalplatform.org/wp-content/uploads/2018/05/GPC_CardSpecification_v2.3.1_PublicRelease_CC.pdf); [(Archive)](https://web.archive.org/web/20230725201402/https://globalplatform.org/wp-content/uploads/2018/05/GPC_CardSpecification_v2.3.1_PublicRelease_CC.pdf).
 - Tools or websites to download APK files with:
   - [Aurora Store](https://auroraoss.com) - best solution for downloading fresh and secure APKs that are not allowed for your region and/or device model.  
   Violates Google's TOS, strongly adviced not to use personal Google account with it, instead try anonymous mode or a throwaway account;
