@@ -110,7 +110,7 @@ For more details, read [this forum topic at XDA](https://forum.xda-developers.co
     - Currently available MID patcher script contains big binary data blobs (which are probably just blocks of model-specific configuration data) and pieces of undocumented code inside of `update-binary` file.  
     I lack required expertise to fully asses safety and correctness of that script, so the only assurance in this case is the high forum reputation of its creator.  
     There are no implications it's malicious, but if you're uncomfortable with this fact, it's adviced to look at the other two solutions. (This is the reason why I did the other ones, personally).
-2. Creating a magisk module that modifies FeliCa configuration file:  
+2. Creating a magisk module that modifies FeliCa configuration file (reported by one person as not working, attempt only if you are willing to experiment):  
     1. (Theory) With the `00000018` key set to `1`;
     2. (Theory) With keys `00000015` and `00000014` pointing to the provider created by your own app. Harder than 1).  
 
