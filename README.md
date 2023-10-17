@@ -50,7 +50,7 @@ After decompiling the APK and inspecting the code, we see that this app does fol
 
 3. On UI initialization, application calls `isCheckInbound` method, which then does the following:  
 a) If key `00000018` is available, it checks if its value is `1` for success;  
-b) If keys `00000015` and `00000014` are missing too, returns success (thanks to @palBazzi for pointing this out);  
+b) If keys `00000015` and `00000014` are missing too, returns success ([thanks to @palBazzi for pointing this out](https://github.com/kormax/osaifu-keitai-google-pixel/issues/1));  
 c) Otherwise, it retreives [ContentProvider](https://developer.android.com/guide/topics/providers/content-providers) URL from key `00000014` and column index `00000015`. Application queries the provider, if it returns `1` result is considered a success.  
 If any check returns a failure, app returns error 2).
 
@@ -110,7 +110,8 @@ For more details, read [this forum topic at XDA](https://forum.xda-developers.co
     - Currently available MID patcher script contains big binary data blobs (which are probably just blocks of model-specific configuration data) and pieces of undocumented code inside of `update-binary` file.  
     I lack required expertise to fully asses safety and correctness of that script, so the only assurance in this case is the high forum reputation of its creator.  
     There are no implications it's malicious, but if you're uncomfortable with this fact, it's adviced to look at the other two solutions. (This is the reason why I did the other ones, personally).
-2. Creating a magisk module that modifies FeliCa configuration file (reported by one person as not working, attempt only if you are willing to experiment):  
+
+2. (Theory) Creating a magisk module that modifies FeliCa configuration file ([reported by one person as not working, attempt only if you are willing to experiment](https://github.com/kormax/osaifu-keitai-google-pixel/issues/2)):  
     1. (Theory) With the `00000018` key set to `1`;
     2. (Theory) With keys `00000015` and `00000014` pointing to the provider created by your own app. Harder than 1).  
 
@@ -120,11 +121,29 @@ For more details, read [this forum topic at XDA](https://forum.xda-developers.co
 
     And following downsides:
       - Requires keeping ROOT for retaining access to the Osaifu-Keitai app. Need to play the SafetyNet survival horror game in order to keep access to Google Wallet.
-3. (Success) By [removing](https://github.com/sunilpaulmathew/De-Bloater) the original `com.google.android.pixelnfc` apk and uploading a patched one that returns successful check on every request. As MSM does not check its signature (cause as of now there is no way for it to do so) everything works from the get go.  
+3. (Success) By meddling with the `com.google.android.pixelnfc` application:
+    1. (Success) Via an Xposed module that patches `com.google.android.pixelnfc`, using a following piece of code ([thanks to @yjwong for finding this out](https://github.com/kormax/osaifu-keitai-google-pixel/issues/3)):
+        ```java
+          private void hookPixelNFC(final LoadPackageParam lpparam) {
+            findAndHookMethod(
+                "com.google.android.pixelnfc.provider.DeviceInfoContentProvider",
+                lpparam.classLoader,
+                "isDeviceJapanSku",
+                String.class,
+                new XC_MethodReplacement() {
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
+                        return true;
+                    }
+                }
+            );
+          }
+        ```
+    2. (Success) By [removing](https://github.com/sunilpaulmathew/De-Bloater) the original `com.google.android.pixelnfc` apk and uploading a patched one that returns successful check on every request. As MSM does not check its signature (cause as of now there is no way for it to do so) everything works from the get go.  
 This is the way i've done it (proof in the GIFs at the beginning of this page).
 This soultion has the same upsides and downsides as 2), although more complex to replicate.
 
-My personal advice is to go with solution 2.1), as it does not require you to make any modifications to software and/or create your own one.
+My personal advice is to go with solution 3.1) or 3.2), even though they are a bit more complex. Solutions 2.* look simpler as they do not require you to make any modifications to software and/or create your own one, but there were reports of them not working, which has to be verified by extra **experienced** users before being deemed 100% successful or failed.
 
 If you go with 2) or 3), you should know the following tips:
 1. If you want to initialize Osaifu-Keitai with Google Wallet, you have to install [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix) in order to pass SafetyNet. For me it did the job from the get go;
