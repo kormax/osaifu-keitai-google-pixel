@@ -111,8 +111,8 @@ For more details, read [this forum topic at XDA](https://forum.xda-developers.co
     I lack required expertise to fully asses safety and correctness of that script, so the only assurance in this case is the high forum reputation of its creator.  
     There are no implications it's malicious, but if you're uncomfortable with this fact, it's adviced to look at the other two solutions. (This is the reason why I did the other ones, personally).
 
-2. (Theory) Creating a magisk module that modifies FeliCa configuration file ([reported by one person as not working, attempt only if you are willing to experiment](https://github.com/kormax/osaifu-keitai-google-pixel/issues/2)):  
-    1. (Theory) With the `00000018` key set to `1`;
+2. (Success) Creating a magisk module that modifies FeliCa configuration file:  
+    1. (Success) With the `00000018` key set to `1`, while keys `00000015` and `00000014` have to be removed fully;
     2. (Theory) With keys `00000015` and `00000014` pointing to the provider created by your own app. Harder than 1).  
 
     This solution has following upsides:
@@ -143,7 +143,8 @@ For more details, read [this forum topic at XDA](https://forum.xda-developers.co
 This is the way i've done it (proof in the GIFs at the beginning of this page).
 This soultion has the same upsides and downsides as 2), although more complex to replicate.
 
-My personal advice is to go with solution 3.1) or 3.2), even though they are a bit more complex. Solutions 2.* look simpler as they do not require you to make any modifications to software and/or create your own one, but there were reports of them not working, which has to be verified by extra **experienced** users before being deemed 100% successful or failed.
+Both solution 2) and 3) were proven to work by many independent user reports. For links to concrete tools and testimonies, visit the [tools](#proven-tools-and-methods) section;
+
 
 If you go with 2) or 3), you should know the following tips:
 1. If you want to initialize Osaifu-Keitai with Google Wallet, you have to install [Universal SafetyNet Fix](https://github.com/Displax/safetynet-fix) in order to pass SafetyNet. For me it did the job from the get go;
@@ -216,10 +217,23 @@ If a full-fledged text-based tutorial or video comes around, I'll surely add a l
 - [Resources](./resources/README.md) directory contains code snippets of the apps related to Osaifu-Keitai functionality lock-out.
 
 
+# Proven tools and methods
+
+| Creator / Reporter | Method        | Confirmed models | Tool or proof                                                                  |
+| ------------------ | ------------- | ---------------- | ------------------------------------------------------------------------------ |
+| (many)             | 1) via Magisk | Pixel 6, Pixel 7 | https://xdaforums.com/t/converting-japanese-pixel-6-to-global-version.4365275/ |
+| @jjyao88           | 2) via Magisk | Pixel 4, Pixel 8 | https://github.com/jjyao88/unlock-felica-pixel                                 |
+| @starks            | 2) via Magisk | Pixel 7, Pixel 8 | https://github.com/starks/PixelFeliCaMod                                       |
+| @yjwong            | 3) via Xposed | Pixel 6          | https://github.com/kormax/osaifu-keitai-google-pixel/issues/3                  |
+| @Gliese129         | 3) via Manual | Pixel 6          | https://github.com/kormax/osaifu-keitai-google-pixel/issues/2                  |
+| @kormax            | 3) via Manual | Pixel 7          | https://github.com/kormax/osaifu-keitai-google-pixel                           |
+
+There's no indication that any of the methods shouldn't work any pixel model, but for safety they'll be added only if there's a direct confirmation for each model combo.
+
 # References
 
 - Useful links:
-  - [Converting Japanese Google Pixel to Global version](https://forum.xda-developers.com/t/converting-japanese-pixel-6-to-global-version.4365275/) - information from this thread can be used to do everything in reverse;
+  - [Converting Japanese Google Pixel to Global version](https://xdaforums.com/t/converting-japanese-pixel-6-to-global-version.4365275/) - information from this thread can be used to do everything in reverse;
   - [Android Ready SE Alliance](https://developers.google.com/android/security/android-ready-se). 
 - Secure Element, FeliCa info:
   - [Mobile FeliCa Platform](https://www.felicanetworks.co.jp/en/mfelica_pf.html);
