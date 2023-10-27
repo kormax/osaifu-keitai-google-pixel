@@ -25,7 +25,7 @@ The only real limiting factor for Osaifu-Keitai support is a requirement for one
 1) Dedicated Mobile FeliCa chip or NFC SWP support for FeliCa SIM `FelicaRf` (original, old implementation);
 2) Global Platform based Secure Element with FeliCa applet `FelicaGp` (new implementation).
 
-Both Google Pixel 7 and 6 series devices have the required FeliCa applet provisoned into the Secure Element (SE) from the factory regardless of target region. As for other models, they have to be verified separately.
+Google Pixel series starting from 4 and 6 have the required FeliCa applet provisoned into the Secure Element (SE) from the factory regardless of target region. As for other models, they have to be verified separately.
 
 To verify that your device is supported, download the [Osaifu-Keitai](https://play.google.com/store/apps/details?id=com.felicanetworks.mfm.main) app `com.felicanetworks.mfm.main` and try opening it. If you're on a non-Japanese/unsupported model, you'll be met with one of the following errors:
 1. `This phone doesn't support Osaifu-Keitai function. Close this application`:  
