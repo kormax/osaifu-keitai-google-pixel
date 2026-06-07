@@ -185,6 +185,12 @@ If you reinstall all applications related to Osaifu-Keitai after returning to st
 
 I have not tested if the full functionality is available (topup/new service creation), but those apps at least open and allow to look at provisioned service info.
 
+- Update for Pixel 9 Pro XL:
+I, @Tweak4141 tried the above, since I did not want to play the SafetyNet cat and mouse game, I provisioned FeliCa after rooting the phone and using Magisk with jjyao88's Magisk module:
+https://github.com/jjyao88/unlock-felica-pixel
+After unrooting the phone, the provisioned account remained, and I was able to load up a Suica card and use it successfully on the JR trains, and the Tokyo metro. Additonally, I was able to top it up at FamilyMart, and also spend balance. I was also able to provision and use a new Waon card, and create a new PASMO card.
+
+
 ## Observations
 
 This section contains comments and thoughts that appeared when researching this topic:
@@ -207,6 +213,10 @@ In my opinion, the following explanations, even with some overlap, could be vali
 
 - During the tests i've found out that CarKey applet does not work on rooted system as it requires hardware-backed SafetyNet attestation before configuration, which cannot be achieved with root. It signals the end of time for SafetyNet bypass, as in the near future more devs will start mandating the hardware-based check in their apps, thus making root-based bypass irreversibly unusable.
 
+- PASMO is very restrictive on the foreign cards it accepts, it would not take anything but a Japanese credit card, and all other cards added to a phone would display "Unavailable for this merchant". You can still reload it at any konbini, and swap between Suica and PASMO fine.
+
+- Attempted to setup ICOCA to test, but it would not provision successfully. Unsure of why.
+
 
 # Notes
 
@@ -227,6 +237,7 @@ If a full-fledged text-based tutorial or video comes around, I'll surely add a l
 | @yjwong            | 3) via Xposed | Pixel 6          | https://github.com/kormax/osaifu-keitai-google-pixel/issues/3                  |
 | @Gliese129         | 3) via Manual | Pixel 6          | https://github.com/kormax/osaifu-keitai-google-pixel/issues/2                  |
 | @kormax            | 3) via Manual | Pixel 7          | https://github.com/kormax/osaifu-keitai-google-pixel                           |
+| @Tweak4141         | 1) via Magisk | Pixel 9 Pro XL   | [#1](./assets/Pixel9ProXL_MainWalletPage.png) [#2](./assets/Pixel9ProXL_FamilyMart_Purchase.png) [#2](./assets/Pixel9ProXL_Train.png) |
 
 There's no indication that any of the methods shouldn't work any pixel model, but for safety they'll be added only if there's a direct confirmation for each model combo.
 
